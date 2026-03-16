@@ -1,9 +1,10 @@
 # PolicyDiff Node.js SDK
 
 [![npm version](https://img.shields.io/npm/v/policydiff.svg)](https://www.npmjs.com/package/policydiff)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-The official Node.js library for the [PolicyDiff API](https://policydiff.com). PolicyDiff is a deterministic engine that allows developers to programmatically detect high-risk changes in privacy policies, terms of service, and pricing pages.
+The official Node.js library for the [PolicyDiff API](https://policydiff.com).
+ PolicyDiff is a deterministic engine that allows developers to programmatically detect high-risk changes in privacy policies, terms of service, and pricing pages.
 
 ## Table of Contents
 
@@ -155,12 +156,11 @@ try {
 ## Resources
 
 - **Official Website**: [policydiff.org](https://policydiff.org)
-- **API Documentation**: [docs.policydiff.com](https://docs.policydiff.com)
-- **GitHub Repository**: [https://github.com/mobin04/policydiff-js](https://github.com/mobin04/policydiff-js)
-- **Report a Bug**: [GitHub Issues](https://github.com/policydiff/policydiff-js/issues)
+- **GitHub Repository**: [https://github.com/mobin04/policy-diff-API](https://github.com/mobin04/policy-diff-API)
+- **Report a Bug**: [GitHub Issues](https://github.com/mobin04/policydiff-js/issues)
 
 ---
 
 ## License
 
-MIT © [PolicyDiff](https://policydiff.org)
+Apache-2.0 © 2026 Mobin Mathew
