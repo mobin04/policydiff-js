@@ -4,7 +4,7 @@
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 The official Node.js library for the [PolicyDiff API](https://policydiff.org).
- PolicyDiff is a deterministic engine that allows developers to programmatically detect high-risk changes in privacy policies, terms of service, and pricing pages.
+ PolicyDiff is a deterministic engine that allows developers to programmatically detect high-risk changes in privacy policies, terms of service, and pricing pages. 
 
 ## Table of Contents
 
