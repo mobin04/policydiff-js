@@ -64,6 +64,7 @@ Use `check()` for immediate, real-time analysis of a policy URL. This is ideal f
 ### Asynchronous Monitoring
 For large-scale tracking or long-running jobs, use the monitoring workflow. This allows you to submit a URL and poll for the result later, which is more resilient for high-traffic pipelines.
 
+#### Single URL Monitoring
 ```typescript
 // 1. Start a monitoring job
 const { job_id } = await pd.monitor('https://example.com/terms');
@@ -72,10 +73,32 @@ console.log(`Job created: ${job_id}`);
 // 2. Retrieve results (typically after a short delay)
 const job = await pd.getJob(job_id);
 
-if (job.status === 'completed') {
+if (job.status === 'COMPLETED') {
   console.log('Detected Changes:', job.result);
-} else {
-  console.log(`Job status: ${job.status}`);
+}
+```
+
+#### Batch URL Monitoring
+Submit multiple URLs simultaneously and manage them as a single batch.
+
+```typescript
+// 1. Submit a batch of URLs
+const { batch_id, total_jobs } = await pd.monitorBatch([
+  'https://example.com/privacy',
+  'https://example.com/terms',
+  'https://example.com/pricing'
+]);
+
+// 2. Check the status of the entire batch
+const batch = await pd.getBatch(batch_id);
+console.log(`Progress: ${batch.completed}/${batch.total}`);
+
+// 3. Iterate through batch jobs
+for (const job of batch.jobs) {
+  if (job.status === 'COMPLETED') {
+    const detail = await pd.getJob(job.job_id);
+    console.log(`Results for ${job.url}:`, detail.result);
+  }
 }
 ```
 
@@ -97,7 +120,7 @@ For the `monitorBatch` method, the SDK supports **Idempotency Keys**. These prev
 - For maximum safety during manual retries, pass your own unique string.
 
 ```typescript
-await pd.monitorBatch(
+const { batch_id } = await pd.monitorBatch(
   ['https://example.com/privacy'], 
   'unique-request-id-123' 
 );
