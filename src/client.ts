@@ -4,6 +4,8 @@ import {
   PolicyDiffConfig, 
   CheckResponse, 
   MonitorResponse, 
+  MonitorBatchResponse,
+  BatchResponse,
   JobResponse, 
   UsageResponse 
 } from './types.js';
@@ -21,7 +23,7 @@ export class PolicyDiff {
       throw new Error('PolicyDiff API key is required');
     }
 
-    this.baseUrl = config.baseUrl || 'https://api.policydiff.com';
+    this.baseUrl = config.baseUrl || 'https://api.policydiff.org';
 
     this.client = axios.create({
       baseURL: this.baseUrl,
@@ -35,17 +37,14 @@ export class PolicyDiff {
       (response) => response,
       (error: AxiosError) => {
         if (error.response) {
-          // The server responded with a status code outside the 2xx range
           throw new PolicyDiffApiError(
             (error.response.data as any)?.message || error.message,
             error.response.status,
             error.response.data
           );
         } else if (error.request) {
-          // The request was made but no response was received
           throw new PolicyDiffNetworkError('Network error: No response received', error);
         } else {
-          // Something else happened in setting up the request
           throw new PolicyDiffNetworkError(error.message, error);
         }
       }
@@ -72,13 +71,21 @@ export class PolicyDiff {
    * Creates asynchronous monitoring jobs for multiple URLs.
    * Supports an optional idempotency key for safe retries.
    */
-  async monitorBatch(urls: string[], idempotencyKey?: string): Promise<MonitorResponse[]> {
+  async monitorBatch(urls: string[], idempotencyKey?: string): Promise<MonitorBatchResponse> {
     const key = idempotencyKey || crypto.randomUUID();
-    const { data } = await this.client.post<MonitorResponse[]>('/v1/monitor/batch', { urls }, {
+    const { data } = await this.client.post<MonitorBatchResponse>('/v1/monitor/batch', { urls }, {
       headers: {
         'Idempotency-Key': key
       }
     });
+    return data;
+  }
+
+  /**
+   * Retrieves the status and details of a batch monitoring request.
+   */
+  async getBatch(batchId: string): Promise<BatchResponse> {
+    const { data } = await this.client.get<BatchResponse>(`/v1/batches/${batchId}`);
     return data;
   }
 

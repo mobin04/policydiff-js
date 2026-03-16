@@ -3,39 +3,77 @@ export interface PolicyDiffConfig {
   baseUrl?: string;
 }
 
-export interface CheckRequest {
-  url: string;
+export interface ChangeDetail {
+  value: string;
+  added: boolean;
+  removed: boolean;
+}
+
+export interface PolicyChange {
+  section: string;
+  type: 'MODIFIED' | 'ADDED' | 'REMOVED';
+  details: ChangeDetail[];
+  risk: 'HIGH' | 'MEDIUM' | 'LOW' | 'NONE';
+  reason: string;
 }
 
 export interface CheckResponse {
-  // Add specific fields based on PolicyDiff API check response schema
-  [key: string]: unknown;
-}
-
-export interface MonitorRequest {
-  url: string;
-}
-
-export interface MonitorBatchRequest {
-  urls: string[];
+  message: string;
+  content_isolation: string;
+  isolation_drift: boolean;
+  risk_level?: 'HIGH' | 'MEDIUM' | 'LOW' | 'NONE';
+  changes?: PolicyChange[];
+  numeric_override_triggered?: boolean;
+  fuzzy_match_count?: number;
+  low_confidence_fuzzy_match_count?: number;
+  fuzzy_collision_count?: number;
+  title_rename_count?: number;
 }
 
 export interface MonitorResponse {
   job_id: string;
+  status: 'PENDING' | 'COMPLETED' | 'FAILED';
+}
+
+export interface MonitorBatchResponse {
+  batch_id: string;
+  total_jobs: number;
+  jobs: Array<{
+    url: string;
+    job_id: string;
+    status: 'PENDING' | 'COMPLETED' | 'FAILED';
+  }>;
+}
+
+export interface BatchResponse {
+  batch_id: string;
+  total: number;
+  completed: number;
+  processing: number;
+  failed: number;
+  jobs: Array<{
+    url: string;
+    job_id: string;
+    status: 'PENDING' | 'COMPLETED' | 'FAILED';
+  }>;
 }
 
 export interface JobResponse {
+  url: string;
   job_id: string;
-  status: 'pending' | 'completed' | 'failed';
-  result?: unknown;
-  created_at: string;
-  [key: string]: unknown;
+  status: 'PENDING' | 'COMPLETED' | 'FAILED';
+  result?: {
+    message: string;
+    isolation_drift: boolean;
+    content_isolation: string;
+    [key: string]: unknown;
+  };
 }
 
 export interface UsageResponse {
-  quota: number;
-  used: number;
+  tier: string;
+  monthly_quota: number;
+  monthly_usage: number;
   remaining: number;
-  reset_at: string;
-  [key: string]: unknown;
+  quota_reset_at: string;
 }

@@ -2,6 +2,7 @@
   "name": "policydiff",
   "version": "1.0.0",
   "description": "Official JavaScript/TypeScript SDK for the PolicyDiff API",
+  "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
