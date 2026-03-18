@@ -1,31 +1,54 @@
-import { PolicyDiffConfig, CheckResponse, MonitorResponse, MonitorBatchResponse, BatchResponse, JobResponse, UsageResponse } from './types.js';
+import { PolicyDiffConfig, CheckResponse, MonitorJobCreatedResponse, MonitorBatchCreatedResponse, BatchStatusResponse, JobStatusResponse, UsageResponse } from './types.js';
 export declare class PolicyDiff {
     private readonly client;
     private readonly baseUrl;
     constructor(config: PolicyDiffConfig);
+    private setupInterceptors;
+    private getHeaders;
     /**
      * Performs a synchronous policy analysis for a given URL.
      */
-    check(url: string): Promise<CheckResponse>;
+    check(url: string, options?: {
+        minInterval?: number;
+        idempotencyKey?: string;
+    }): Promise<CheckResponse>;
     /**
      * Creates an asynchronous monitoring job for a single URL.
      */
-    monitor(url: string): Promise<MonitorResponse>;
+    monitor(url: string, options?: {
+        idempotencyKey?: string;
+    }): Promise<MonitorJobCreatedResponse>;
     /**
      * Creates asynchronous monitoring jobs for multiple URLs.
-     * Supports an optional idempotency key for safe retries.
      */
-    monitorBatch(urls: string[], idempotencyKey?: string): Promise<MonitorBatchResponse>;
+    monitorBatch(urls: string[], options?: {
+        idempotencyKey?: string;
+    }): Promise<MonitorBatchCreatedResponse>;
     /**
      * Retrieves the status and details of a batch monitoring request.
      */
-    getBatch(batchId: string): Promise<BatchResponse>;
+    getBatchStatus(batchId: string): Promise<BatchStatusResponse>;
     /**
-     * Retrieves the results of an asynchronous monitoring job.
+     * Retrieves the status of an asynchronous monitoring job.
      */
-    getJob(jobId: string): Promise<JobResponse>;
+    getJobStatus(jobId: string): Promise<JobStatusResponse>;
     /**
      * Retrieves API quota usage.
      */
     getUsage(): Promise<UsageResponse>;
+    /**
+     * Polls getJobStatus until status is COMPLETED or FAILED.
+     * Implements exponential backoff.
+     */
+    waitForJob(jobId: string, options?: {
+        intervalMs?: number;
+        timeoutMs?: number;
+    }): Promise<JobStatusResponse>;
+    /**
+     * Polls getBatchStatus until all nested jobs are finished.
+     */
+    waitForBatch(batchId: string, options?: {
+        intervalMs?: number;
+        timeoutMs?: number;
+    }): Promise<BatchStatusResponse>;
 }
